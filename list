@@ -1,0 +1,116 @@
+#include "stdafx.h"
+#include <iostream>
+#include <string>
+using namespace std;
+
+struct Node{
+	int value;
+	Node *next;
+};
+
+void push(Node **head, int data) {
+	Node *tmp = (Node*)malloc(sizeof(Node));
+	tmp->value = data;
+	tmp->next = (*head);
+	(*head) = tmp;
+}
+
+void insert(Node *head, unsigned n, int val) {
+	unsigned i = 0;
+	Node *tmp = NULL;
+	//Находим нужный элемент. Если вышли за пределы списка, то выходим из цикла,
+	//ошибка выбрасываться не будет, произойдёт вставка в конец
+	while (i < n-1 && head->next) {
+		head = head->next;
+		i++;
+	}
+	tmp = new Node[];
+	tmp->value = val;
+	//Если это не последний элемент, то next перекидываем на следующий узел
+	if (head->next) {
+		tmp->next = head->next;
+		//иначе на NULL
+	}
+	else {
+		tmp->next = NULL;
+	}
+	head->next = tmp;
+}
+
+Node* getNth(Node* head, int n) {
+	int counter = 0;
+	while (counter < n && head) {
+		head = head->next;
+		counter++;
+	}
+	return head;
+}
+
+int pop(Node **head) {
+	Node* prev = NULL;
+	int val;
+	if (head == NULL) {
+		exit(-1);
+	}
+	prev = (*head);
+	val = prev->value;
+	(*head) = (*head)->next;
+	free(prev);
+	return val;
+}
+
+int deleteNth(Node **head, int n) {
+	if (n == 0) {
+		return pop(head);
+	}
+	else {
+		Node *prev = getNth(*head, n - 1);
+		Node *elm = prev->next;
+		int val = elm->value;
+		prev->next = elm->next;
+		free(elm);
+		return val;
+	}
+}
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	int index;
+	double data;
+	int N;
+	Node *head = NULL;
+	string command;
+	cout << "How many commands?";
+	cin >> N;
+	for (int i = 0; i < N; i++)
+	{
+		cin >> command >> index;
+		if (command == "add")
+		{
+			cin >> data;
+			if (head == NULL || index==0)
+			{
+				push(&head, data);
+			}
+			else insert(head, index, data);
+		}
+
+		if (command == "del")
+		{
+			deleteNth(&head, index);
+		}
+
+		if (command == "get")
+		{
+			if (head == NULL)
+			{
+				exit(-1);
+			}
+			Node *el = getNth(head, index);
+			cout << el->value << "\n";
+		}
+	}
+		system("pause");
+	return 0;
+}
+
