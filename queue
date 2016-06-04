@@ -1,0 +1,89 @@
+#include "stdafx.h"
+#include<iostream>
+#include <string>
+
+using namespace std;
+
+class queue //Класс очереди
+{
+private:
+	struct queue_ob// Структура для хранения элементов очереди
+	{
+		int value;//Поле для хранения значения элемента очереди
+		queue_ob *addr; // Поле для хранения слеющего элемента
+	};
+
+	queue_ob *head; // указатель, хранящий адресс головы очереди
+	queue_ob *tail; // Указатель хранящий адрес хвоста
+	int size; //Текущий размер очереди
+public:
+	queue()
+	{
+		head = new(queue_ob); 
+		tail = head; 
+		head->addr = 0; 
+		size = 1; 
+	}
+	void push(int value)
+	{
+		size++;
+		queue_ob *temp = new(queue_ob);
+		temp->addr = 0;
+		temp->value = value;
+		tail->addr = temp;
+		tail = temp;
+	}
+	int pop()
+	{
+		if (size == 0)
+		{
+			cout << "Очередь пуста - удалять нечего!" << endl;
+			return 1;
+		}
+		queue_ob *temp = head; 
+		head = head->addr; 
+		int value = temp->value;
+		delete temp;  
+		size--; 
+		return value;
+	}
+	void headdata(int data)
+	{
+		head->value = data;
+	}
+};
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	int x = 0;
+	int N;
+	int data;
+	string command;
+	cin >> N;
+	queue A;
+	for (int i = 0; i < N; i++)
+	{
+		cin >> command;
+		if (command == "add")
+		{
+			cin >> data;
+			if (x == 0){
+				A.headdata(data);
+				x++;
+			}
+			else {
+				A.push(data);
+			}
+		}
+		if (command == "del")
+		{
+			A.pop();
+		}
+		if (command == "get")
+		{
+			cout << "\n" << A.pop() << "\n";
+		}
+	}
+	system("pause");
+	return 0;
+}
