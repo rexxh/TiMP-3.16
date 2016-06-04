@@ -1,0 +1,65 @@
+#include "stdafx.h"
+#include <iostream>
+#include <string>
+using namespace std;
+
+struct Node{
+	int value;
+	Node *next;
+}; 
+
+void push(Node **head, int data) {
+	Node *tmp = (Node*)malloc(sizeof(Node));
+	tmp->value = data;
+	tmp->next = (*head);
+	(*head) = tmp;
+}
+
+int pop(Node **head) {
+	Node* prev = NULL;
+	int val;
+	prev = (*head);
+	val = prev->value;
+	(*head) = (*head)->next;
+	free(prev);
+	return val;
+}
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	int index;
+	double data;
+	int N;
+	Node *head = NULL;
+    string command;
+	cin >> N;
+	for (int i = 0; i < N; i++)
+	{
+		cin >> command;
+		if (command == "add")
+		{
+			cin >> data;
+			push(&head, data);
+		}
+		if (command == "del")
+		{
+			if (head == NULL) {
+				exit(-1);
+			}
+			pop(&head);	
+		}
+		if (command == "get")
+		{
+			if (head == NULL)
+			{
+				exit(-1);
+			}
+			int value;
+			value=pop(&head);
+			cout << "\n" << value << "\n";
+		}
+	}
+	system("pause");
+	return 0;
+}
+
